@@ -193,6 +193,13 @@
 14. **Even-Odd Number Printer Problem**
 15. **Thread Sleep**
 
+Advanced Concepts
+
+16. CountDown Latch
+17. Cyclic Barrier
+18. Thread Pool, Custom Thread Pool
+19. Executor Service with singleThreadPool, fixedThreadPool, cachedThreadPool. Diff between each of the thread pool types.
+
 ## 11. Serialization
 
 ## 12. Clone & Immutable
