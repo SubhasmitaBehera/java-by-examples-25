@@ -199,6 +199,8 @@ Advanced Concepts
 17. Cyclic Barrier
 18. Thread Pool, Custom Thread Pool
 19. Executor Service with singleThreadPool, fixedThreadPool, cachedThreadPool. Diff between each of the thread pool types.
+20. Blocking Queue
+21. Semaphores & Mutex
 
 ## 11. Serialization
 
