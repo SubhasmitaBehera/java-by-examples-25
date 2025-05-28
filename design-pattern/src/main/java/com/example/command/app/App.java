@@ -16,10 +16,13 @@ public class App {
         RemoteControl remote = new RemoteControl();
 
         remote.setCommand(turnOnTVCommand);
+        remote.pressButton();  // Outputs: TV is turned ON
+        remote.pressButton();  // Outputs: TV is already ON.
 
 
 
         remote.setCommand(turnOffTVCommand);
-        remote.pressButton(); // Outputs: TV is now off
+        remote.pressButton(); // Outputs: TV is turned OFF
+        remote.pressButton(); // Outputs: TV is already OFF
     }
 }

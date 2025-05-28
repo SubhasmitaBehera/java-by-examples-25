@@ -3,14 +3,24 @@ package com.example.command.models;
 import com.example.command.contracts.Device;
 
 public class TV implements Device {
+    private boolean isOn = false;
+
     @Override
     public void turnOn() {
-        System.out.println("TV is now on");
+        if (!isOn) {
+            isOn = true;
+            System.out.println("TV is turned ON.");
+        } else {
+            System.out.println("TV is already ON.");
+        }
     }
-
     @Override
     public void turnOff() {
-        System.out.println("TV is now off");
+        if (isOn) {
+            isOn = false;
+            System.out.println("TV is turned OFF.");
+        } else {
+            System.out.println("TV is already OFF.");
+        }
     }
-
 }
