@@ -1,6 +1,8 @@
 package com.example.servlet;
 
+import com.example.dtos.SignupDto;
 import com.example.util.DBUtil;
+import com.google.gson.Gson;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,8 +15,9 @@ import java.sql.SQLException;
 @WebServlet("/api/signup")
 public class SignupServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException{
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
+        SignupDto signupDto = new Gson().fromJson(req.getReader(), SignupDto.class);
+        String username = signupDto.getUsername();
+        String password = signupDto.getPassword();
 
         try {
             String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
