@@ -13,5 +13,14 @@ public class DBUtil {
         Class.forName("com.mysql.cj.jdbc.Driver");
         return DriverManager.getConnection(URL, USER, PASS);
     }
+    public static String getPasswordHash(String username) throws Exception {
+        try(Connection connection = getConnection()) {
+            String sql = "SELECT password FROM users WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1,username);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.next() ? resultSet.getString("password") : null;
+        }
+    }
 
 }

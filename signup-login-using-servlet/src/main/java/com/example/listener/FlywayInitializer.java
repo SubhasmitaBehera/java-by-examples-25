@@ -20,6 +20,8 @@ public class FlywayInitializer implements ServletContextListener {
                     .load();
 
             flyway.migrate();
+//            flyway.repair();
+
 
             System.out.println("Flyway migration completed.");
         } catch (Exception e) {

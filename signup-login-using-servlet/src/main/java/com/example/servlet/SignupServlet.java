@@ -2,6 +2,7 @@ package com.example.servlet;
 
 import com.example.dtos.SignupDto;
 import com.example.service.AuthService;
+import com.example.util.ApiException;
 import com.example.util.DBUtil;
 import com.google.gson.Gson;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,12 +24,17 @@ public class SignupServlet extends HttpServlet {
         String password = req.getParameter("password");
         System.out.println("username - "+username);
         System.out.println("password - "+password);
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
+        if (username == null || password == null || "".equals(username) || "".equals(password)){
+            throw new ApiException("Username or password missing","VALIDATION_ERROR", 400);
+        }
         try {
-            authService.register(username,password);
+            authService.register(username,hashedPassword);
             res.getWriter().write("User registered successfully!");
-        } catch (Exception e) {
-            res.setStatus(500);
-            res.getWriter().write("Registration failed.");
+        }
+        catch (Exception e) {
+            throw new ApiException("Failed to register user","SIGNUP_ERROR",500);
         }
     }
 }
