@@ -1,6 +1,7 @@
 package com.example.servlet;
 
 import com.example.dtos.SignupDto;
+import com.example.service.AuthService;
 import com.example.util.DBUtil;
 import com.google.gson.Gson;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,21 +13,22 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/api/signup")
+@WebServlet("/signup")
 public class SignupServlet extends HttpServlet {
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException{
-        SignupDto signupDto = new Gson().fromJson(req.getReader(), SignupDto.class);
-        String username = signupDto.getUsername();
-        String password = signupDto.getPassword();
+    private final AuthService authService = new AuthService();
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException{
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+        System.out.println("username - "+username);
+        System.out.println("password - "+password);
         try {
-            String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
-            boolean created = DBUtil.createUser(username,hashed);
-            res.setContentType("application/json");
-            res.getWriter().write("{\"success\": " + created + "}");
-        } catch (SQLException e) {
+            authService.register(username,password);
+            res.getWriter().write("User registered successfully!");
+        } catch (Exception e) {
             res.setStatus(500);
-            res.getWriter().write("{\"error\": \"Internal server error\"}");
+            res.getWriter().write("Registration failed.");
         }
     }
 }

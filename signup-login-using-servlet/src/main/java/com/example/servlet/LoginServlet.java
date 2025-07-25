@@ -1,7 +1,9 @@
 package com.example.servlet;
 
+import com.example.service.AuthService;
 import com.example.util.DBUtil;
 import com.example.util.JWTUtil;
+import com.google.gson.JsonObject;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,27 +13,31 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.io.IOException;
 import java.sql.SQLException;
 
-@WebServlet("/api/login")
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+    private final AuthService authService = new AuthService();
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
         try {
-            String storedHash = DBUtil.getPasswordHash(username);
-            if (storedHash != null && BCrypt.checkpw(password, storedHash)){
-                String token = JWTUtil.generateToken(username);
-                res.setHeader("Authorization", "Bearer" + token);
-                res.setContentType("application/json");
-                res.getWriter().write("{\"message\": \"Login succesful\"}");
+            String token = authService.login(username,password);
+            if (token != null){
+                res.setHeader("Auth-token", token);
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("token", token);
+                jsonObject.addProperty("msg", "Login successful!");
+                res.getWriter().write(String.valueOf(jsonObject));
             }
             else {
                 res.setStatus(401);
-                res.getWriter().write("{\"error\": \"Invalid credentials\"}");
+                res.getWriter().write("Invalid credentials.");
             }
-        } catch (SQLException e){
+        } catch (Exception e){
             res.setStatus(500);
-            res.getWriter().write("{\"error\": \"Internal server error\"}");
+            res.getWriter().write("Login failed.");
         }
     }
 }
